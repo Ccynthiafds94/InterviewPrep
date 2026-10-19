@@ -96,3 +96,16 @@ JavaScript & React Fundamentals
     setTimeout(() => resolve("…")); // ignored
     });
 
+4. How would you render and optimize a list containing 10,000+ records without slowing down the UI?
+
+    Don’t render all 10,000 DOM nodes at once. Render only what the user can see (virtualization / windowing), and keep the remaining work off the main thread or spread out over time.
+
+        Key techniques
+        Virtualization (windowing): Render only the visible rows plus a small buffer, and update them on scroll. This is the best fix because the DOM stays at around 20-50 nodes however large the data is.
+        Pagination or infinite scroll: Load and render data in pages of 50-100 using IntersectionObserver.
+        Chunked rendering: If you must render everything, split the work into batches with requestAnimationFrame or requestIdleCallback so the UI never freezes.
+        Batch DOM updates: Use DocumentFragment and avoid appending to the DOM inside a loop.
+        Event delegation: Attach one listener on the parent instead of 10,000 listeners on the rows.
+        Debounce/throttle: Apply this to search, filter, and scroll handlers.
+        Web Workers: Move heavy sorting, filtering, or parsing off the main thread.
+        CSS help: Use content-visibility: auto and fixed row heights to cut layout and paint cost.
